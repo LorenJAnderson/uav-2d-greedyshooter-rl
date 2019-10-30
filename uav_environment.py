@@ -20,7 +20,6 @@ class Environment:
         if not self.is_good_start():
             return self.reset()
         else:
-            self.history = {}
             self.time = 0
             self.update_history(0, False, None)
             return self.construct_obs()
