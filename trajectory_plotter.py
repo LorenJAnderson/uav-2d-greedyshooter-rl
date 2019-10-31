@@ -77,7 +77,7 @@ if not os.path.exists(dir):
     os.mkdir(dir)
 
 device = "cuda"
-path = "test/150000-1.0-DQN-test.dat"
+path = "test/150000-1.0-DQN-test.dat"  # path to pytorch model
 net = DQN(3, 10, 64).to(device)
 net.load_state_dict(torch.load(path))
 test_agent(net)
