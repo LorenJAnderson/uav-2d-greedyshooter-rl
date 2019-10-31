@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -32,6 +33,7 @@ def test_agent(net):
     test_env = uav_environment.Environment(vel=0.1, steps=100, turn=np.pi/12,
                                            cap_dist=0.25, cap_angle=np.pi/24, start_dev=0.5)
     cumulative_reward = 0
+    index = 1
     for i in range(2):
         for pos in range(0, 8):
             angle = pos * np.pi/4
@@ -55,19 +57,24 @@ def test_agent(net):
                     state, reward, done, info = test_env.step(angle, vel)
                     cumulative_reward += reward
                     if done:
-                        trajectory_plotter_animated(info)
+                        trajectory_plotter_animated(info, index)
+                index += 1
     return cumulative_reward/80
 
 
-def trajectory_plotter_animated(history):
+def trajectory_plotter_animated(history, index):
     for i in range(len(history)):
         state = history[i][0]
         plt.scatter(state[0], state[1], marker=(3, 0, 180/np.pi*state[2]-90), color='blue', label="RL")
         plt.scatter(state[3], state[4], marker=(3, 0, 180/np.pi*state[5]-90), color='red', label="GREEDY")
-    plt.legend(("RL", "GREEDY"))
-    plt.show()
+    plt.savefig("pics/" + str(index) + "-plot.jpg")
     plt.close()
 
+
+cwd = os.getcwd()
+dir = os.path.join(cwd, "pics")
+if not os.path.exists(dir):
+    os.mkdir(dir)
 
 device = "cuda"
 path = "test/150000-1.0-DQN-test.dat"
