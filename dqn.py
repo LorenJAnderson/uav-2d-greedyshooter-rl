@@ -90,7 +90,6 @@ class Agent:
         angle = ((action % 5) - 2) * np.pi/24
         vel = 0.05 if action < 5 else 0.1
 
-        # do step in the environment
         new_state, reward, is_done, _ = self.env.step(angle, vel)
         self.total_reward += reward
         new_state = new_state
@@ -126,14 +125,13 @@ def test_agent(net):
     test_env = uav_environment.Environment(vel=0.1, steps=100, turn=np.pi/12,
                                            cap_dist=0.25, cap_angle=np.pi/24, start_dev=0.5)
     cumulative_reward = 0
-    for i in range(2):
-        for pos in range(0, 8):
-            angle = pos * np.pi/4
-            for dist in range(5, 10):
-                distance = dist/10
-                init_uav_state = np.array([distance, 0, angle])
-                greedy_header = 0 if i == 0 else np.pi
-                init_greedy_state = np.array([0, 0, greedy_header])
+    for greedy_angle in range(2):
+        for uav_angle in range(0, 8):
+            for distance in np.linspace(0.5, 0.9, 5):
+                init_uav_angle = uav_angle * np.pi / 4
+                init_uav_state = np.array([distance, 0, init_uav_angle])
+                init_greedy_angle = 0 if greedy_angle == 0 else np.pi
+                init_greedy_state = np.array([0, 0, init_greedy_angle])
                 state = test_env.reset(uav_state=init_uav_state, greedy_state=init_greedy_state)
                 done = False
                 while not done:
